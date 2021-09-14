@@ -5,6 +5,10 @@ import Main from './Main';
 import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
 import EditProfilePopup from "./EditProfilePopup";
+import { Route } from 'react-router-dom';
+import Login from './Login';
+import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
 import api from "../utils/api.js";
 
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
@@ -123,6 +127,19 @@ function App() {
     <div className="container">
      <div className="page">
       <Header/>
+
+      <Switch>
+       <Route path="/sign-in">
+        <Login />
+       </Route>
+
+       <Route path="/sign-up">
+        <Register />
+       </Route>
+
+       <ProtectedRoute path="/" />
+      </Switch>
+
       <Main
        onEditProfile={handleEditProfileClick}
        onAddPlace={handleAddPlaceClick}
@@ -155,6 +172,7 @@ function App() {
     <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={Object.keys(selectedCard).length !== 0}/>
 
    </div>
+   <InfoTooltip />
   </CurrentUserContext.Provider>
  );
 
