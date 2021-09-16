@@ -1,8 +1,42 @@
 class Auth {
- constructor(baseUrl) {
-  this.baseUrl = baseUrl;
+ constructor(url) {
+  this.url = url;
  }
 
+//регистрация
+ registration({ email, password }) {
+  return fetch(`${this.url}/signup`, {
+   method: 'POST',
+   headers: {
+    'Content-Type': 'application/json',
+   },
+   body: JSON.stringify({ password, email }),
+  }).then(this._checkResponse);
+ }
+
+ //авторизация
+ authorization({ email, password }) {
+  return fetch(`${this.url}/signin`, {
+   method: 'POST',
+   headers: {
+    'Content-Type': 'application/json',
+   },
+   body: JSON.stringify({ password, email }),
+  }).then(this._checkResponse);
+ }
+
+ //проверка токена
+ checkToken(token) {
+  return fetch(`${this.url}/users/me`, {
+   method: 'GET',
+   headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${token}`,
+   },
+  }).then(this._checkResponse);
+ }
+
+ // тут проверка ответа
  _checkResponse(res) {
   if (res.ok) {
    return res.json();
@@ -11,35 +45,6 @@ class Auth {
  }
 
 
- registration({ email, password }) {
-  return fetch(`${this.baseUrl}/signup`, {
-   method: 'POST',
-   headers: {
-    'Content-Type': 'application/json',
-   },
-   body: JSON.stringify({ password, email }),
-  }).then(this._checkResponse);
- }
-
- authorization({ email, password }) {
-  return fetch(`${this.baseUrl}/signin`, {
-   method: 'POST',
-   headers: {
-    'Content-Type': 'application/json',
-   },
-   body: JSON.stringify({ password, email }),
-  }).then(this._checkResponse);
- }
-
- checkToken(token) {
-  return fetch(`${this.baseUrl}/users/me`, {
-   method: 'GET',
-   headers: {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-   },
-  }).then(this._checkResponse);
- }
 }
 
 const auth = new Auth('https://auth.nomoreparties.co');

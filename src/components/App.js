@@ -9,6 +9,7 @@ import { Route, Switch, withRouter, useHistory } from 'react-router-dom';
 import Login from './Login';
 import Register from './Register';
 import ProtectedRoute from "./ProtectedRoute"; // импортируем HOC
+
 import InfoTooltip from './InfoTooltip';
 import Token from '../utils/token';
 
@@ -28,7 +29,7 @@ function App() {
  const [isLoading, setIsLoading] = React.useState(false); //содержит статус пользователя
  const [idCardForDelete, setIdCardForDelete] = React.useState(null);
 
-
+ const [isConfirmPopupOpen, setIsConfirmPopupOpen] = React.useState(false);
  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
  const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = React.useState(false);
@@ -37,7 +38,21 @@ function App() {
  const [cards, setCards] = React.useState([]);
 
 
-
+ React.useEffect(() => {
+  const token = Token.getToken();
+  if (token) {
+   auth
+    .checkToken(token)
+    .then(({ data }) => {
+     setEmail(data.email);
+     setLoggedIn(true);
+     history.push('/');
+    })
+    .catch((err) => showInfoTooltip(true, err));
+  } else {
+   console.log('Нет токена');
+  }
+ }, [history]);
 
  React.useEffect(() => {
   api.getUserData()
@@ -81,6 +96,9 @@ function App() {
   setIsEditProfilePopupOpen(false);
   setIsAddPlacePopupOpen(false);
   setSelectedCard({});
+  setIsLoading(false);
+  setIdCardForDelete(null);
+  setIsConfirmPopupOpen(true);
  }
 
  function handleCardClick(card) {
@@ -88,6 +106,7 @@ function App() {
  }
 
  function handleUpdateUser(data) {
+  setIsLoading(true);
   api.editUserProfile(data)
    .then((dataProfile) => {
     setCurrentUser(dataProfile);
@@ -104,6 +123,7 @@ function App() {
  }
 
  function handleAddPlaceSubmit(data) {
+  setIsLoading(true);
   api.addNewCard(data)
    .then((dataNewCard) => {
     setCards([...cards, dataNewCard]);
@@ -127,6 +147,8 @@ function App() {
 
 
  function handleCardDelete(card) {
+  setIdCardForDelete(card._id);
+  setIsConfirmPopupOpen(true);
   api.delCard(card._id)
    .then(() => {
     const data = cards.filter(function(i) {
@@ -173,6 +195,21 @@ function App() {
    })
    .catch((err) => showInfoTooltip(true, err));
  }
+
+
+ function handleCardDeleteAfterConfirm() {
+  setIsLoading(true);
+  api
+   .delCard(idCardForDelete)
+   .then(() => {
+    setCards((state) => state.filter((c) => c._id !== idCardForDelete));
+    closeAllPopups();
+   })
+   .catch((err) => {
+    console.log('handleCardDeleteAfterConfirm', err);
+   });
+ }
+
 
  return (
   <CurrentUserContext.Provider value={currentUser}>
@@ -222,9 +259,24 @@ function App() {
     </div>
 
 
-    <EditProfilePopup isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} onUpdateUser={handleUpdateUser}/>
-    <EditAvatarPopup isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} onUpdateAvatar={handleUpdateAvatar}/>
-    <AddPlacePopup isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} onAddPlace={handleAddPlaceSubmit}/>
+    <EditProfilePopup
+     isOpen={isEditProfilePopupOpen}
+     onClose={closeAllPopups}
+     onUpdateUser={handleUpdateUser}
+     isLoading={isLoading}
+    />
+    <EditAvatarPopup
+     isOpen={isEditAvatarPopupOpen}
+     onClose={closeAllPopups}
+     onUpdateAvatar={handleUpdateAvatar}
+     isLoading={isLoading}
+    />
+    <AddPlacePopup
+     isOpen={isAddPlacePopupOpen}
+     onClose={closeAllPopups}
+     onAddPlace={handleAddPlaceSubmit}
+     isLoading={isLoading}
+    />
 
 
 
@@ -240,10 +292,15 @@ function App() {
     <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={Object.keys(selectedCard).length !== 0}/>
 
    </div>
+
+
+
    <InfoTooltip
     isOpen={isInfoTooltipOpen}
     onClose={closeAllPopups}
     isResponseFail={isResponseFail}
+    onConfirmDeleteCard={handleCardDeleteAfterConfirm}
+    isLoading={isLoading}
    />
   </CurrentUserContext.Provider>
  );
