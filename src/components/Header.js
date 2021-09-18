@@ -1,11 +1,11 @@
 import headerLogo from "../images/header-logo.svg";
 import React from "react";
-import { Link, useLocation } from 'react-router-dom'; //useHistory
+import { Link, useLocation } from 'react-router-dom'; //useLocation
 
 function Header({ userEmail, loggedIn, onSignOut }) {
  const { pathname } = useLocation();
 
- const to = pathname === '/sign-up' ? '/sign-in' : pathname === '/sign-in' ? '/sign-up' : '';
+ const url = pathname === '/sign-up' ? '/sign-in' : pathname === '/sign-in' ? '/sign-up' : '';
  const text = pathname === '/sign-up' ? 'Войти' : pathname === '/sign-in' ? 'Регистрация' : '';
 
  return (
@@ -19,7 +19,7 @@ function Header({ userEmail, loggedIn, onSignOut }) {
       Выйти
      </Link>
     ) : (
-     <Link to={to} className="header__link">
+     <Link to={url} className="header__link">
       {text}
      </Link>
     )}

@@ -1,7 +1,7 @@
-import LoginForm from './LoginForm';
+import PageForm from './PageForm';
 
 function Login({ onLogin }) {
-  return <LoginForm title="Вход" submitBtnText="Войти" onSubmit={onLogin} />;
+  return <PageForm title="Вход" submitBtnText="Войти" onSubmit={onLogin} />;
 }
 
 export default Login;

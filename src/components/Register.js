@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import LoginForm from './LoginForm';
+import PageForm from './PageForm';
 
 function Register({ onRegister }) {
   return (
-   <LoginForm
+   <PageForm
     title="Регистрация"
     submitBtnText="Зарегистрироваться"
     onSubmit={onRegister}
@@ -11,7 +11,7 @@ function Register({ onRegister }) {
      <Link to="/sign-in" className="login-form__link">
        Уже зарегистрированы? Войти
      </Link>
-   </LoginForm>
+   </PageForm>
   );
 }
 

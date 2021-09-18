@@ -39,7 +39,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
    onSubmit={handleSubmit}
   >
    <input
-    value={name}
+    value={name || ''}
     className="popup__info popup__info_naming"
     id="name-card"
     maxLength="30"
@@ -52,7 +52,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
    />
    <span className="popup__error" id="name-card-error"> </span>
    <input
-    value={link}
+    value={link || ''}
     className="popup__info popup__info_link"
     id="link"
     name="link"
@@ -62,7 +62,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
     onChange={handleLinkChange}
    />
    <span className="popup__error" id="link-error"> </span>
-   <button className="popup__button popup__button_invalid" type="submit">Создать</button>
+   <button className="popup__button" type="submit">Создать</button>  {/*popup__button_invalid*/}
   </PopupWithForm>
  )
 }

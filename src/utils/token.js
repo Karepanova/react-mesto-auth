@@ -1,17 +1,20 @@
 class Token {
- static key = 'jwt';
-
- static saveToken(token) {
-  localStorage.setItem(this.key, token);
+ constructor() {
+  this.key = 'jwt';
  }
 
- static removeToken() {
-  localStorage.removeItem(this.key);
+ saveToken(token) {
+  localStorage.setItem(this.key, token); //сохраняется в localStorage (имя jwt, значение token)
  }
 
- static getToken() {
+ getToken() {
   return localStorage.getItem(this.key);
  }
-}
 
-export default Token;
+ removeToken() {
+  localStorage.removeItem(this.key);
+ }
+}
+const token = new Token();
+
+export default token;

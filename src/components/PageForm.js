@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function LoginForm({ title, submitBtnText, onSubmit, children, comp }) {
+function PageForm({ title, submitBtnText, onSubmit, children, comp }) {
  const [inputValues, setInputValues] = useState({});
 
  const handleInputChange = (e) => {
@@ -54,4 +54,4 @@ function LoginForm({ title, submitBtnText, onSubmit, children, comp }) {
   );
 }
 
-export default LoginForm;
+export default PageForm;
