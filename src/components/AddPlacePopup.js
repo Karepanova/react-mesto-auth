@@ -34,6 +34,7 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
    title="Новое место"
    name="add-card-form-name"
    popup="new-card"
+   buttonText="Создать"
    isOpen={isOpen}
    onClose={onClose}
    onSubmit={handleSubmit}
@@ -62,7 +63,6 @@ function AddPlacePopup({isOpen, onClose, onAddPlace}) {
     onChange={handleLinkChange}
    />
    <span className="popup__error" id="link-error"> </span>
-   <button className="popup__button" type="submit">Создать</button>  {/*popup__button_invalid*/}
   </PopupWithForm>
  )
 }

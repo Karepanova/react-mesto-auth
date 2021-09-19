@@ -1,5 +1,5 @@
 .login-form__input {
-    width: 100%;
+    width: 358px;
     font-weight: 500;
     font-size: 14px;
     line-height: 1.2;
@@ -10,6 +10,19 @@
     padding: 13px 5px;
     margin-bottom: 30px;
     outline: none;
+}
+
+@media all and (max-width: 450px) {
+    .login-form__input {
+        width: 300px;
+    }
+}
+
+
+@media all and (max-width: 320px) {
+    .login-form__input {
+        width: 260px;
+    }
 }
 
 .login-form__input::placeholder {

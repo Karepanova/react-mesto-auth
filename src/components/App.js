@@ -113,6 +113,9 @@ function App() {
     setCurrentUser(dataProfile);
     closeAllPopups();
    })
+   .catch((err) => {
+   console.log(`Ошибка сервера ${err}`)
+  });
  }
 
  function handleUpdateAvatar(data) {
@@ -121,6 +124,9 @@ function App() {
     setCurrentUser(dataAvatar);
     closeAllPopups();
    })
+   .catch((err) => {
+    console.log(`Ошибка сервера ${err}`)
+   });
  }
 
  function handleAddPlaceSubmit(data) {
@@ -130,6 +136,9 @@ function App() {
     setCards([dataNewCard, ...cards]);
     closeAllPopups();
    })
+   .catch((err) => {
+    console.log(`Ошибка сервера ${err}`)
+   });
  }
 
 
@@ -138,12 +147,16 @@ function App() {
   const isLiked = card.likes.some(i => i._id === currentUser._id);
 
   // Отправляем запрос в API и получаем обновлённые данные карточки
-  api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
+  api.changeLikeCardStatus(card._id, !isLiked)
+   .then((newCard) => {
    // Формируем новый массив на основе имеющегося, подставляя в него новую карточку
    const newCards = cards.map((c) => c._id === card._id ? newCard : c);
    // Обновляем стейт
    setCards(newCards);
-  });
+  })
+   .catch((err) => {
+    console.log(`Ошибка сервера ${err}`)
+   });
  }
 
 //открытие окна с подтверждением
@@ -154,7 +167,9 @@ function App() {
  }
 
  //удаление карточки
- function cardDel() {
+ function cardDel(e) {
+// Запрещаем браузеру переходить по адресу формы
+  e.preventDefault();
 
   api.delCard(idCardDelete)
    .then(() => {
@@ -162,8 +177,12 @@ function App() {
      return i._id !== idCardDelete;
     });
     setCards(data);
+    //setCards((state) => state.filter((c) => c._id !== card._id));
     closeAllPopups();
    })
+   .catch((err) => {
+    console.log(`Ошибка сервера ${err}`)
+   });
  }
 
  //выход из системы
@@ -274,9 +293,10 @@ function App() {
      title="Вы уверены?"
      name=""
      popup="confirm"
+     buttonText="Да"
      onClose={closeAllPopups}
+     onSubmit={cardDel}
     >
-     <button className="popup__button" type="button" value="Да" onClick={cardDel}>Да</button>
     </PopupWithForm>
 
     <ImagePopup
